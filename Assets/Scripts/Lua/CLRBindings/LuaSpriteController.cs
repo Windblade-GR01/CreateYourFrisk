@@ -307,6 +307,22 @@ public class LuaSpriteController {
         }
     }
 
+    public float[] rotation3d {
+        get { return new float[] { internalRotation.x, internalRotation.y, internalRotation.z }; }
+        set {
+            if (value == null)
+                throw new CYFException("sprite.rotation3d can't be nil.");
+            for (int i = 0; i < value.Length; i++)
+                value[i] = Math.Mod(value[i], 360);
+            // If we don't have three floats, we throw an error
+            if (value.Length == 3) {
+                internalRotation = new Vector3(value[0], value[1], value[2]);
+                img.GetComponent<RectTransform>().eulerAngles = internalRotation;
+            } else
+                throw new CYFException("sprite.rotation3d: Must be a table of 3 numbers.");
+        }
+    }
+
     // The layer of the sprite
     public string layer {
         // You can't get or set the layer on an enemy sprite
@@ -627,36 +643,6 @@ public class LuaSpriteController {
         else                                                      GetTarget().SetSiblingIndex(sprite.GetTarget().GetSiblingIndex() + 1);
     }
     
-    private int _masked = 0;
-    public void Mask(string mode) {
-        int masked = mode == "box" ? 1 : (mode == "sprite" ? 2 : (mode == "stencil" ? 3 : 0));
-
-        if (masked != _masked) {
-            RectMask2D box = img.GetComponent<RectMask2D>();
-            Mask spr = img.GetComponent<Mask>();
-
-            if (masked == 1) {
-                if (spr != null)
-                    GameObject.Destroy(spr);
-                img.AddComponent<RectMask2D>();
-            } else if (masked > 1) {
-                if (box != null)
-                    GameObject.Destroy(box);
-                if (_masked < 2)
-                    img.AddComponent<Mask>();
-                if (masked == 3)
-                    img.GetComponent<Mask>().showMaskGraphic = false;
-            } else if (masked == 0) {
-                if (spr != null)
-                    GameObject.Destroy(spr);
-                else
-                    GameObject.Destroy(box);
-            }
-        }
-
-        _masked = masked;
-    }
-
     private int _masked = 0;
     public void Mask(string mode) {
         int masked = mode == "box" ? 1 : (mode == "sprite" ? 2 : (mode == "stencil" ? 3 : 0));
