@@ -102,6 +102,36 @@ span.unitale::before{
     content: " <0.2.1a>";
 }
 
+span.new::before {
+    /* content: url("../img/new.png"); */
+    content: "..";
+    color: transparent;
+    
+    font-size: 28px;
+    
+    background-image: url("../img/new.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 32px 32px;
+    
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;;
+}
+
+li.new::before {
+    position: absolute;
+    content: url("../img/new.png");
+    margin-top: 8px;
+}
+li.new.active::before {
+    margin-top: 2px;
+    left: -20px;
+}
+li.new a {
+    text-decoration: underline;
+    text-decoration-color: #BA7B00;
+}
+
 h4::before {
 	content: "* ";
 }
